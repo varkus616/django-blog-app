@@ -1,0 +1,23 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Send message</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Subject</span>
+            </div>
+            <textarea class="form-control" name="subject" aria-label="Subject"></textarea>
+        </div>
+        <div class="input-group mt-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Message</span>
+            </div>
+            <textarea class="form-control" name="body" aria-label="Message"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Send</button>
+    </form>
+</div>
+{% endblock %}

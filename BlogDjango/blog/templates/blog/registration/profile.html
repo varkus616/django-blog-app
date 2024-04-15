@@ -1,0 +1,72 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+    {% if message %}
+        <div class="alert alert-info" role="alert">
+            {{ message }}
+        </div>
+    {% else %}
+        {% if logged_profile %}
+            <h1>My Account</h1>
+            <h2>My username: {{ user.username }}</h2>
+            <p>My password: {{ viewed_user.password }}</p>
+            <a href="{% url 'blog:inbox' user.username%}" class="btn btn-primary">Inbox</a>
+        {% else %}
+            <h1>Profile of {{ viewed_user.username }}</h1>
+        {% endif %}
+        {% if user_posts %}
+            <h3>Posts:</h3>
+            {% for post in user_posts %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <time class="card-subtitle text-muted">{{ post.published_date }}</time>
+                        <h2 class="card-title"><a href="{% url 'blog:post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
+                        {% if logged_profile %}
+                            <form method="post" action="{% url 'blog:post_delete' pk=post.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete this post</button>
+                            </form>
+                        {% endif %}
+                        <p class="card-text">{{ post.text|linebreaksbr }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No posts yet.</p>
+        {% endif %}
+        {% if user_friends %}
+            <h3>Friends list:</h3>
+            <ul class="list-group">
+                {% for friend in user_friends %}
+                    <li class="list-group-item">Friends with: <a href="{% url 'blog:profile' friend.user.username %}">{{ friend.user.username }}</a>
+                        {% if logged_profile %}
+                            <form method="post" action="{% url 'blog:remove_friend' username=friend.user.username %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Remove from friends list</button>
+                            </form>
+                            <form method="post" action="{% url 'blog:send_message' username=friend.user.username %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Send message</button>
+                            </form>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            {% if logged_profile %}
+                <p class="alert alert-info">You have no friends.</p>
+            {% else %}
+                <p class="alert alert-info">This user has no friends.</p>
+            {% endif %}
+        {% endif %}
+        {% if not logged_profile %}
+            {% if user.userprofile not in viewed_user.userprofile.friends.all %}
+                <form method="post" action="{% url 'blog:send_friend_invitation' username=viewed_user.username %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Add Friend</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endblock %}

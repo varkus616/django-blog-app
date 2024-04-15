@@ -1,0 +1,7 @@
+
+<div class="invitation-content">
+    <p>Hello {{ meta_data.to_user.username }},</p>
+    <p>You have received an invitation from <a href="">{{ meta_data.from_user.username }}! </a></p>
+    <p>Please click the link below to accept the invitation:</p>
+    <p><a href="{% url 'blog:accept_invitation' username=meta_data.from_user.username %}">Accept Invitation</a></p>
+</div>

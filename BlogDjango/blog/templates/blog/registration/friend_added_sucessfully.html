@@ -1,0 +1,11 @@
+{% extends 'blog/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+    {% if msg %}
+        <p>{{msg}}</p>
+    {% endif %}
+
+{% endblock %}

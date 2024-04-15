@@ -1,0 +1,18 @@
+{% extends 'blog/base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div class="col-md-6">
+        {% if users_list %}
+        <h3>Users</h3>
+        <ul class="list-group">
+            {% for user in users_list %}
+            <li class="list-group-item d-line"><a href="{% url 'blog:profile' username=user.username %}"><b>{{forloop.counter}}.{{ user.username }}</b></a>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted">There are no polls to show! Add your own for it to be shown here.</p>
+        {% endif %}
+    </div>
+{% endblock %}
